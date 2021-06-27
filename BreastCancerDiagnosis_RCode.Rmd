@@ -1,0 +1,564 @@
+---
+title: "Project_part1"
+author: "Jingzhi Zhou"
+date: "11/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+setwd("C:/Users/11638/Dropbox/My PC (LAPTOP-5N5V9K0V)/Desktop/535/ISE 535/Project/DATA")
+library(readr)
+library(dplyr)
+library(tidyverse)
+```
+
+# Load Data
+```{r}
+breast_cancer <- read_csv("wdbc.data", 
+                          col_names = FALSE, col_types = cols(X1 = col_character()))
+
+names1 <- c('id_number', 'diagnosis', 'radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean', 'concavity_mean','concave_points_mean', 
+            'symmetry_mean', 'fractal_dimension_mean', 'radius_se', 'texture_se', 'perimeter_se', 
+            'area_se', 'smoothness_se', 'compactness_se', 'concavity_se', 'concave_points_se', 'symmetry_se', 'fractal_dimension_se', 'radius_worst', 'texture_worst', 'perimeter_worst', 'area_worst', 'smoothness_worst', 'compactness_worst', 'concavity_worst', 'concave_points_worst', 'symmetry_worst', 'fractal_dimension_worst')
+
+colnames (breast_cancer) <- names1
+```
+
+# Creating two subsets
+```{r}
+M_breast_cancer = breast_cancer[breast_cancer$diagnosis=="M",]
+B_breast_cancer = breast_cancer[breast_cancer$diagnosis=="B",]
+```
+
+# Summary and Correlation
+```{r}
+pairs(M_breast_cancer[,3:12])
+summary(M_breast_cancer[,3:12])
+```
+```{r}
+library(corrplot)
+par(mfrow=c(1,2))
+X1 = cor(M_breast_cancer[,3:12])
+corrplot(X1, method="color", main = "Mean: Malignant Class")
+
+X2 = cor(B_breast_cancer[,3:12])
+corrplot(X2, method="color", main = "Mean: Benign Class")
+
+X3 = cor(M_breast_cancer[,13:22])
+corrplot(X3, method="color", main = "SE: Malignant Class")
+
+X4 = cor(B_breast_cancer[,13:22])
+corrplot(X4, method="color", main = "SE: Benign Class")
+
+X5 = cor(M_breast_cancer[,23:32])
+corrplot(X5, method="color", main = "Worst: Malignant Class")
+
+X6 = cor(B_breast_cancer[,23:32])
+corrplot(X6, method="color", main = "Worst: Benign Class")
+```
+
+```{r}
+X1 = cor(B_breast_cancer[,3:12])
+corrplot(X1, method="color")
+X2 = cor(B_breast_cancer[,13:22])
+corrplot(X2, method="color")
+X3 = cor(B_breast_cancer[,23:32])
+corrplot(X3, method="color")
+```
+
+# Boxplots
+#of means
+```{r}
+par(mfrow=c(2,5))
+boxplot(radius_mean~diagnosis, data=breast_cancer)
+boxplot(texture_mean~diagnosis,data=breast_cancer)
+boxplot(perimeter_mean~diagnosis,data=breast_cancer)
+boxplot(area_mean~diagnosis, data=breast_cancer)
+boxplot(smoothness_mean~diagnosis,data=breast_cancer)
+boxplot(compactness_mean~diagnosis,data=breast_cancer)
+boxplot(concavity_mean~diagnosis,data=breast_cancer)
+boxplot(concave_points_mean~diagnosis,data=breast_cancer)
+boxplot(symmetry_mean~diagnosis,data=breast_cancer)
+boxplot(fractal_dimension_mean~diagnosis,data=breast_cancer)
+```
+#of se
+```{r}
+par(mfrow=c(2,5))
+boxplot(radius_se~diagnosis, data=breast_cancer)
+boxplot(texture_se~diagnosis,data=breast_cancer)
+boxplot(perimeter_se~diagnosis,data=breast_cancer)
+boxplot(area_se~diagnosis, data=breast_cancer)
+boxplot(smoothness_se~diagnosis,data=breast_cancer)
+boxplot(compactness_se~diagnosis,data=breast_cancer)
+boxplot(concavity_se~diagnosis,data=breast_cancer)
+boxplot(concave_points_se~diagnosis,data=breast_cancer)
+boxplot(symmetry_se~diagnosis,data=breast_cancer)
+boxplot(fractal_dimension_se~diagnosis,data=breast_cancer)
+```
+#of worst
+```{r}
+par(mfrow=c(2,5))
+boxplot(radius_worst~diagnosis, data=breast_cancer)
+boxplot(texture_worst~diagnosis,data=breast_cancer)
+boxplot(perimeter_worst~diagnosis,data=breast_cancer)
+boxplot(area_worst~diagnosis, data=breast_cancer)
+boxplot(smoothness_worst~diagnosis,data=breast_cancer)
+boxplot(compactness_worst~diagnosis,data=breast_cancer)
+boxplot(concavity_worst~diagnosis,data=breast_cancer)
+boxplot(concave_points_worst~diagnosis,data=breast_cancer)
+boxplot(symmetry_worst~diagnosis,data=breast_cancer)
+boxplot(fractal_dimension_worst~diagnosis,data=breast_cancer)
+```
+
+# Histograms of whole dataset
+```{r}
+par(mfrow=c(2,3))      
+hist(breast_cancer$radius_mean)
+hist(breast_cancer$texture_mean)
+hist(breast_cancer$perimeter_mean)
+hist(breast_cancer$area_mean)
+hist(breast_cancer$smoothness_mean)
+hist(breast_cancer$compactness_mean)
+hist(breast_cancer$concavity_mean)
+hist(breast_cancer$concave_points_mean)
+hist(breast_cancer$symmetry_mean)
+hist(breast_cancer$fractal_dimension_mean)
+```
+
+# Histograms of Diagnosis M
+```{r}
+par(mfrow=c(2,3))
+hist(M_breast_cancer$radius_mean)
+hist(M_breast_cancer$texture_mean)
+hist(M_breast_cancer$perimeter_mean)
+hist(M_breast_cancer$area_mean)
+hist(M_breast_cancer$smoothness_mean)
+hist(M_breast_cancer$compactness_mean)
+hist(M_breast_cancer$concavity_mean)
+hist(M_breast_cancer$concave_points_mean)
+hist(M_breast_cancer$symmetry_mean)
+hist(M_breast_cancer$fractal_dimension_mean)
+```
+
+# Histograms of Diagnosis B
+```{r}
+par(mfrow=c(2,3))
+hist(B_breast_cancer$radius_mean)
+hist(B_breast_cancer$texture_mean)
+hist(B_breast_cancer$perimeter_mean)
+hist(B_breast_cancer$area_mean)
+hist(B_breast_cancer$smoothness_mean)
+hist(B_breast_cancer$compactness_mean)
+hist(B_breast_cancer$concavity_mean)
+hist(B_breast_cancer$concave_points_mean)
+hist(B_breast_cancer$symmetry_mean)
+hist(B_breast_cancer$fractal_dimension_mean)
+```
+#SE
+```{r}
+par(mfrow=c(2,5))
+hist(M_breast_cancer$radius_se)
+hist(M_breast_cancer$texture_se)
+hist(M_breast_cancer$perimeter_se)
+hist(M_breast_cancer$area_se)
+hist(M_breast_cancer$smoothness_se)
+hist(M_breast_cancer$compactness_se)
+hist(M_breast_cancer$concavity_se)
+hist(M_breast_cancer$concave_points_se)
+hist(M_breast_cancer$symmetry_se)
+hist(M_breast_cancer$fractal_dimension_se)
+```
+
+```{r}
+par(mfrow=c(2,5))
+hist(B_breast_cancer$radius_se)
+hist(B_breast_cancer$texture_se)
+hist(B_breast_cancer$perimeter_se)
+hist(B_breast_cancer$area_se)
+hist(B_breast_cancer$smoothness_se)
+hist(B_breast_cancer$compactness_se)
+hist(B_breast_cancer$concavity_se)
+hist(B_breast_cancer$concave_points_se)
+hist(B_breast_cancer$symmetry_se)
+hist(B_breast_cancer$fractal_dimension_se)
+```
+
+#Worst
+```{r}
+par(mfrow=c(2,5))
+hist(M_breast_cancer$radius_worst)
+hist(M_breast_cancer$texture_worst)
+hist(M_breast_cancer$perimeter_worst)
+hist(M_breast_cancer$area_worst)
+hist(M_breast_cancer$smoothness_worst)
+hist(M_breast_cancer$compactness_worst)
+hist(M_breast_cancer$concavity_worst)
+hist(M_breast_cancer$concave_points_worst)
+hist(M_breast_cancer$symmetry_worst)
+hist(M_breast_cancer$fractal_dimension_worst)
+```
+
+```{r}
+par(mfrow=c(2,5))
+hist(B_breast_cancer$radius_worst)
+hist(B_breast_cancer$texture_worst)
+hist(B_breast_cancer$perimeter_worst)
+hist(B_breast_cancer$area_worst)
+hist(B_breast_cancer$smoothness_worst)
+hist(B_breast_cancer$compactness_worst)
+hist(B_breast_cancer$concavity_worst)
+hist(B_breast_cancer$concave_points_worst)
+hist(B_breast_cancer$symmetry_worst)
+hist(B_breast_cancer$fractal_dimension_worst)
+```
+
+# Multiple Logistic Model
+
+#3-12,13-22,23-32
+
+# drop SE
+```{r}
+breast_cancer1 <- breast_cancer[-c(13:22)]
+```
+
+# new column isM: if diagnosis is malignant, column value is 1, otherwise it is 0.
+```{r}
+breast_cancer1$isM <- as.factor(ifelse(breast_cancer1$diagnosis=="M",1,0))
+breast_cancer1$isM <- as.numeric(as.character(breast_cancer1$isM))
+breast_cancer1
+```
+
+
+```{r}
+#pairs(breast_cancer1[,3:22])
+cor(breast_cancer1[,3:23])
+summary(breast_cancer1[,3:23])
+```
+# From the correlation, we can notice that variables:[ radius_mean,perimeter_mean,area_mean,concavity_mean,concave_points_mean,radius_worst,perimeter_worst,area_worst,concavity_worst,concave_points_worst] are relatively more correlated to "isM".
+# The mean and worst values of most variables are highly correlated.
+
+
+#fit full model
+```{r}
+breast_cancer1 = breast_cancer1 %>% select(-id_number, -diagnosis)
+breast_cancer1
+```
+
+```{r}
+model.null = glm(isM ~ 1,
+                 data=breast_cancer1,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+model.full = glm(isM ~ .,
+                 data=breast_cancer1,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+step(model.null,
+     scope = list(upper=model.full),
+             direction="both",
+             test="Chisq",
+             data=breast_cancer1)
+```
+
+
+
+# Best Multiple logistic model
+```{r}
+model.final = glm(isM ~ smoothness_worst + texture_worst + concave_points_mean + area_worst + perimeter_mean + symmetry_worst + compactness_mean,data=breast_cancer1,family = binomial(link="logit")
+                 )
+summary(model.final)
+```
+
+
+Test model accuracy
+```{r}
+set.seed(1)
+train = as_tibble(breast_cancer1[sample(nrow(breast_cancer1), nrow(breast_cancer1)*.7),])
+test = anti_join(breast_cancer1, train, by = NULL)
+```
+
+```{r}
+mod = glm(isM ~ smoothness_worst + texture_worst + concave_points_mean + area_worst + perimeter_mean + symmetry_worst + compactness_mean, data=train,family = binomial(link="logit")
+                 )
+```
+
+```{r}
+test$model_prob <- predict(mod, test, type = "response")
+test <- test  %>% mutate(pred = 1*(model_prob > .53) + 0,
+                                 isM)
+test <- test %>% mutate(accurate = 1*(pred == isM))
+sum(test$accurate)/nrow(test)
+```
+
+
+
+
+
+
+
+#Full data with SE
+
+
+
+```{r}
+breast_cancer2 <- breast_cancer
+breast_cancer2$isM <- as.factor(ifelse(breast_cancer$diagnosis=="M",1,0))
+breast_cancer2$isM <- as.numeric(as.character(breast_cancer2$isM))
+breast_cancer2 = breast_cancer2 %>% select(-id_number, -diagnosis)
+breast_cancer2
+```
+
+```{r}
+model.null2 = glm(isM ~ 1,
+                 data=breast_cancer2,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+model.full2 = glm(isM ~ .,
+                 data=breast_cancer2,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+step(model.null2,
+     scope = list(upper=model.full2),
+             direction="both",
+             test="Chisq",
+             data=breast_cancer2)
+```
+
+```{r}
+model.final2 = glm(formula = isM ~ smoothness_worst + texture_worst + symmetry_worst + 
+    compactness_se + concavity_mean + texture_se + area_se + 
+    concave_points_worst + area_worst, family = binomial(link = "logit"), 
+    data = breast_cancer2)
+summary(model.final2)
+```
+
+```{r}
+set.seed(1)
+train = as_tibble(breast_cancer2[sample(nrow(breast_cancer2), nrow(breast_cancer2)*.7),])
+test = anti_join(breast_cancer2, train, by = NULL)
+```
+
+```{r}
+mod = glm(isM ~ smoothness_worst + texture_worst + symmetry_worst + 
+    compactness_se + concavity_mean + texture_se + area_se + 
+    concave_points_worst + area_worst, data=train,family = binomial(link="logit")
+                 )
+```
+
+```{r}
+test$model_prob <- predict(mod, test, type = "response")
+test <- test  %>% mutate(pred = 1*(model_prob > .53) + 0,
+                                 isM)
+test <- test %>% mutate(accurate = 1*(pred == isM))
+sum(test$accurate)/nrow(test)
+```
+
+
+
+
+# model with only mean
+
+
+```{r}
+breast_cancerM <- breast_cancer[-c(13:32)]
+breast_cancerM$isM <- as.factor(ifelse(breast_cancer$diagnosis=="M",1,0))
+breast_cancerM$isM <- as.numeric(as.character(breast_cancerM$isM))
+breast_cancerM = breast_cancerM %>% select(-id_number, -diagnosis)
+breast_cancerM
+```
+
+```{r}
+model.nullM = glm(isM ~ 1,
+                 data=breast_cancerM,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+model.fullM = glm(isM ~ .,
+                 data=breast_cancerM,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+step(model.nullM,
+     scope = list(upper=model.fullM),
+             direction="both",
+             test="Chisq",
+             data=breast_cancerM)
+```
+
+```{r}
+model.finalM = glm(formula = isM ~ concave_points_mean + texture_mean + area_mean + 
+    perimeter_mean + smoothness_mean + symmetry_mean, family = binomial(link = "logit"), 
+    data = breast_cancerM)
+summary(model.finalM)
+```
+
+```{r}
+set.seed(1)
+train = as_tibble(breast_cancerM[sample(nrow(breast_cancerM), nrow(breast_cancerM)*.7),])
+test = anti_join(breast_cancerM, train, by = NULL)
+```
+
+```{r}
+mod = glm(isM ~ concave_points_mean + texture_mean + area_mean + 
+    perimeter_mean + smoothness_mean + symmetry_mean, data=train,family = binomial(link="logit")
+                 )
+```
+
+```{r}
+test$model_prob <- predict(mod, test, type = "response")
+test <- test  %>% mutate(pred = 1*(model_prob > .53) + 0,
+                                 isM)
+test <- test %>% mutate(accurate = 1*(pred == isM))
+sum(test$accurate)/nrow(test)
+```
+
+
+
+
+
+# model with only SE
+
+
+```{r}
+breast_cancerS <- breast_cancer[c(1,2,13:22)]
+breast_cancerS$isM <- as.factor(ifelse(breast_cancer$diagnosis=="M",1,0))
+breast_cancerS$isM <- as.numeric(as.character(breast_cancerS$isM))
+breast_cancerS = breast_cancerS %>% select(-id_number, -diagnosis)
+breast_cancerS
+```
+
+```{r}
+model.nullS = glm(isM ~ 1,
+                 data=breast_cancerS,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+model.fullS = glm(isM ~ .,
+                 data=breast_cancerS,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+step(model.nullS,
+     scope = list(upper=model.fullS),
+             direction="both",
+             test="Chisq",
+             data=breast_cancerS)
+```
+
+```{r}
+model.finalS = glm(formula = isM ~ area_se + radius_se + compactness_se + fractal_dimension_se, family = binomial(link = "logit"), 
+    data = breast_cancerS)
+summary(model.finalS)
+```
+
+```{r}
+set.seed(1)
+train = as_tibble(breast_cancerS[sample(nrow(breast_cancerS), nrow(breast_cancerS)*.7),])
+test = anti_join(breast_cancerS, train, by = NULL)
+```
+
+```{r}
+mod = glm(isM  ~ area_se + radius_se + compactness_se + fractal_dimension_se, data=train,family = binomial(link="logit")
+                 )
+```
+
+```{r}
+test$model_prob <- predict(mod, test, type = "response")
+test <- test  %>% mutate(pred = 1*(model_prob > .53) + 0,
+                                 isM)
+test <- test %>% mutate(accurate = 1*(pred == isM))
+sum(test$accurate)/nrow(test)
+```
+
+
+
+# model with only worst
+
+
+```{r}
+breast_cancerW <- breast_cancer[c(1,2,23:32)]
+breast_cancerW$isM <- as.factor(ifelse(breast_cancer$diagnosis=="M",1,0))
+breast_cancerW$isM <- as.numeric(as.character(breast_cancerW$isM))
+breast_cancerW = breast_cancerW %>% select(-id_number, -diagnosis)
+breast_cancerW
+```
+
+```{r}
+model.nullW = glm(isM ~ 1,
+                 data=breast_cancerW,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+model.fullW = glm(isM ~ .,
+                 data=breast_cancerW,
+                 family = binomial(link="logit")
+                 )
+```
+
+```{r}
+step(model.nullW,
+     scope = list(upper=model.fullW),
+             direction="both",
+             test="Chisq",
+             data=breast_cancerW)
+```
+
+```{r}
+model.finalW = glm(formula = isM ~ smoothness_worst + texture_worst + concave_points_worst +
+    area_worst, family = binomial(link = "logit"), 
+    data = breast_cancerW)
+summary(model.finalW)
+```
+
+```{r}
+set.seed(1)
+train = as_tibble(breast_cancerW[sample(nrow(breast_cancerW), nrow(breast_cancerW)*.7),])
+test = anti_join(breast_cancerW, train, by = NULL)
+```
+
+```{r}
+mod = glm(formula = isM ~ smoothness_worst + texture_worst + concave_points_worst +
+    area_worst, family = binomial(link = "logit"), 
+    data = train)
+```
+
+```{r}
+test$model_prob <- predict(mod, test, type = "response")
+test <- test  %>% mutate(pred = 1*(model_prob > .53) + 0,
+                                 isM)
+test <- test %>% mutate(accurate = 1*(pred == isM))
+sum(test$accurate)/nrow(test)
+```
+
+```{r}
+knitr::purl("Project_part1.Rmd", output = "Project_code.R", documentation = 2)
+```
+
+
